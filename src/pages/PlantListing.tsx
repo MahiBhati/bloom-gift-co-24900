@@ -1,63 +1,24 @@
 import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
-import { Leaf } from "lucide-react";
-
-const planData = {
-  basic: {
-    name: "Basic",
-    price: "₹99",
-    selectCount: 2,
-    plants: [
-      { id: "tulsi", name: "Tulsi (Holy Basil)", note: "Spiritual and purifying", emoji: "🌿" },
-      { id: "money-plant", name: "Money Plant", note: "Symbol of prosperity", emoji: "💚" },
-      { id: "jade", name: "Jade Plant", note: "Good luck and positivity", emoji: "🍀" },
-      { id: "aloe", name: "Aloe Vera", note: "Easy care, healing plant", emoji: "🌱" },
-      { id: "syngonium", name: "Syngonium", note: "Attractive and low-maintenance", emoji: "🌿" },
-    ],
-  },
-  standard: {
-    name: "Standard",
-    price: "₹499",
-    selectCount: 3,
-    plants: [
-      { id: "rose", name: "Rose Plant", note: "Love and beauty", emoji: "🌹" },
-      { id: "jasmine", name: "Jasmine (Mogra)", note: "Fragrant and peaceful", emoji: "🌸" },
-      { id: "hibiscus", name: "Hibiscus", note: "Vibrant and auspicious", emoji: "🌺" },
-      { id: "areca", name: "Areca Palm", note: "Indoor air purifier", emoji: "🌴" },
-      { id: "snake", name: "Snake Plant", note: "Low-maintenance gift", emoji: "🌿" },
-      { id: "peace-lily", name: "Peace Lily", note: "Elegant and purifying", emoji: "🕊️" },
-    ],
-  },
-  premium: {
-    name: "Premium",
-    price: "₹999",
-    selectCount: 5,
-    plants: [
-      { id: "bonsai", name: "Bonsai Tree", note: "Artistic and symbolic", emoji: "🌳" },
-      { id: "rubber", name: "Rubber Plant", note: "Elegant indoor choice", emoji: "🌿" },
-      { id: "bamboo", name: "Bamboo Palm", note: "Prosperity & positivity", emoji: "🎋" },
-      { id: "lavender", name: "Lavender", note: "Fragrant & relaxing", emoji: "💜" },
-      { id: "anthurium", name: "Anthurium", note: "Modern decorative plant", emoji: "❤️" },
-      { id: "succulent", name: "Succulent Combo", note: "Trendy gifting option", emoji: "🌵" },
-      { id: "fiddle", name: "Fiddle Leaf Fig", note: "Statement indoor plant", emoji: "🌿" },
-      { id: "sunflower", name: "Sunflower Seeds", note: "Cheerful and bright", emoji: "🌻" },
-    ],
-  },
-};
 
 const PlantListing = () => {
-  const [searchParams] = useSearchParams();
-  const plan = searchParams.get("plan") || "basic";
+  const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [selectedPlants, setSelectedPlants] = useState<string[]>([]);
-  const [showConfirmation, setShowConfirmation] = useState(false);
 
-  const currentPlan = planData[plan as keyof typeof planData] || planData.basic;
+  const { plan = "Basic", price = "₹99", selectCount = 2, plants = [] } = location.state || {};
+
+  if (!location.state) {
+    navigate('/plans');
+    return null;
+  }
+
+  const currentPlan = { name: plan, price, selectCount, plants };
 
   const handlePlantToggle = (plantId: string) => {
     setSelectedPlants((prev) => {
@@ -85,49 +46,17 @@ const PlantListing = () => {
       });
       return;
     }
-    setShowConfirmation(true);
+    
+    navigate('/confirmation', {
+      state: {
+        plan: currentPlan.name,
+        price: currentPlan.price,
+        selectedPlants: selectedPlants.map(id => 
+          currentPlan.plants.find((p: any) => p.id === id)
+        )
+      }
+    });
   };
-
-  if (showConfirmation) {
-    return (
-      <div className="min-h-screen bg-gradient-to-b from-background via-accent/20 to-background flex items-center justify-center p-4">
-        <Card className="w-full max-w-md text-center shadow-lg rounded-3xl">
-          <CardHeader>
-            <div className="flex justify-center mb-4">
-              <Leaf className="w-16 h-16 text-primary animate-pulse" />
-            </div>
-            <CardTitle className="text-3xl text-primary">🎉 Success!</CardTitle>
-            <CardDescription className="text-lg mt-2">
-              You've subscribed successfully! 🌱 Your thoughtful green gift is on its way.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="bg-accent/30 rounded-2xl p-4">
-              <h3 className="font-semibold text-primary mb-2">Your Selected Plants:</h3>
-              <div className="space-y-1">
-                {selectedPlants.map((plantId) => {
-                  const plant = currentPlan.plants.find((p) => p.id === plantId);
-                  return (
-                    <div key={plantId} className="text-sm">
-                      {plant?.emoji} {plant?.name}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Button className="w-full rounded-full shadow-md" size="lg" onClick={() => navigate("/login")}>
-                Login to Track My Subscription
-              </Button>
-              <Button variant="outline" className="w-full rounded-full" onClick={() => navigate("/")}>
-                ← Back to Home
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-accent/20 to-background">

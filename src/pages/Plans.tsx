@@ -17,11 +17,11 @@ const plans = [
       "Delivery across Pune",
     ],
     plants: [
-      { name: "Tulsi (Holy Basil)", note: "Spiritual and purifying", emoji: "🌿" },
-      { name: "Money Plant", note: "Symbol of prosperity", emoji: "💚" },
-      { name: "Jade Plant", note: "Good luck and positivity", emoji: "🍀" },
-      { name: "Aloe Vera", note: "Easy care, healing plant", emoji: "🌱" },
-      { name: "Syngonium", note: "Attractive and low-maintenance", emoji: "🌿" },
+      { id: "tulsi", name: "Tulsi (Holy Basil)", note: "Spiritual and purifying", emoji: "🌿" },
+      { id: "money-plant", name: "Money Plant", note: "Symbol of prosperity", emoji: "💚" },
+      { id: "jade", name: "Jade Plant", note: "Good luck and positivity", emoji: "🍀" },
+      { id: "aloe", name: "Aloe Vera", note: "Easy care, healing plant", emoji: "🌱" },
+      { id: "syngonium", name: "Syngonium", note: "Attractive and low-maintenance", emoji: "🌿" },
     ],
     selectCount: 2,
   },
@@ -39,12 +39,12 @@ const plans = [
       "Monthly care tips",
     ],
     plants: [
-      { name: "Rose Plant", note: "Love and beauty", emoji: "🌹" },
-      { name: "Jasmine (Mogra)", note: "Fragrant and peaceful", emoji: "🌸" },
-      { name: "Hibiscus", note: "Vibrant and auspicious", emoji: "🌺" },
-      { name: "Areca Palm", note: "Indoor air purifier", emoji: "🌴" },
-      { name: "Snake Plant", note: "Low-maintenance gift", emoji: "🌿" },
-      { name: "Peace Lily", note: "Elegant and purifying", emoji: "🕊️" },
+      { id: "rose", name: "Rose Plant", note: "Love and beauty", emoji: "🌹" },
+      { id: "jasmine", name: "Jasmine (Mogra)", note: "Fragrant and peaceful", emoji: "🌸" },
+      { id: "hibiscus", name: "Hibiscus", note: "Vibrant and auspicious", emoji: "🌺" },
+      { id: "areca", name: "Areca Palm", note: "Indoor air purifier", emoji: "🌴" },
+      { id: "snake", name: "Snake Plant", note: "Low-maintenance gift", emoji: "🌿" },
+      { id: "peace-lily", name: "Peace Lily", note: "Elegant and purifying", emoji: "🕊️" },
     ],
     selectCount: 3,
     popular: true,
@@ -64,14 +64,14 @@ const plans = [
       "Exclusive plant care workshops",
     ],
     plants: [
-      { name: "Bonsai Tree", note: "Artistic and symbolic", emoji: "🌳" },
-      { name: "Rubber Plant", note: "Elegant indoor choice", emoji: "🌿" },
-      { name: "Bamboo Palm", note: "Prosperity & positivity", emoji: "🎋" },
-      { name: "Lavender", note: "Fragrant & relaxing", emoji: "💜" },
-      { name: "Anthurium", note: "Modern decorative plant", emoji: "❤️" },
-      { name: "Succulent Combo", note: "Trendy gifting option", emoji: "🌵" },
-      { name: "Fiddle Leaf Fig", note: "Statement indoor plant", emoji: "🌿" },
-      { name: "Sunflower Seeds", note: "Cheerful and bright", emoji: "🌻" },
+      { id: "bonsai", name: "Bonsai Tree", note: "Artistic and symbolic", emoji: "🌳" },
+      { id: "rubber", name: "Rubber Plant", note: "Elegant indoor choice", emoji: "🌿" },
+      { id: "bamboo", name: "Bamboo Palm", note: "Prosperity & positivity", emoji: "🎋" },
+      { id: "lavender", name: "Lavender", note: "Fragrant & relaxing", emoji: "💜" },
+      { id: "anthurium", name: "Anthurium", note: "Modern decorative plant", emoji: "❤️" },
+      { id: "succulent", name: "Succulent Combo", note: "Trendy gifting option", emoji: "🌵" },
+      { id: "fiddle", name: "Fiddle Leaf Fig", note: "Statement indoor plant", emoji: "🌿" },
+      { id: "sunflower", name: "Sunflower Seeds", note: "Cheerful and bright", emoji: "🌻" },
     ],
     selectCount: 5,
   },
@@ -149,7 +149,14 @@ const Plans = () => {
                   className="w-full mt-6 rounded-full shadow-md hover:shadow-lg transition-all"
                   variant={plan.popular ? "default" : "outline"}
                   size="lg"
-                  onClick={() => navigate(`/plants?plan=${plan.name.toLowerCase()}`)}
+                  onClick={() => navigate('/select-plants', { 
+                    state: { 
+                      plan: plan.name, 
+                      price: plan.price,
+                      selectCount: plan.selectCount,
+                      plants: plan.plants
+                    } 
+                  })}
                 >
                   Subscribe Now
                 </Button>

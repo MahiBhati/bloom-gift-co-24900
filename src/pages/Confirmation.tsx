@@ -34,7 +34,7 @@ const Confirmation = () => {
           return;
         }
 
-        const { error } = await supabase
+        const { error } = await (supabase as any)
           .from('subscriptions')
           .insert({
             user_id: session.user.id,

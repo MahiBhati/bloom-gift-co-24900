@@ -27,8 +27,8 @@ const Hero = () => {
               Celebrate life's special moments with thoughtful plant gifts. Our eco-friendly subscriptions make gifting meaningful and sustainable.
             </p>
             <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-              <Button size="lg" className="text-base rounded-full shadow-md hover:shadow-lg" onClick={() => window.location.href = '/subscribe'}>
-                Subscribe Now
+              <Button size="lg" className="text-base rounded-full shadow-md hover:shadow-lg" onClick={() => window.location.href = '/login'}>
+                Login
               </Button>
               <Button size="lg" variant="outline" className="text-base rounded-full" onClick={() => window.location.href = '/plans'}>
                 Explore Plans

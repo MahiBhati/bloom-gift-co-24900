@@ -11,6 +11,7 @@ import Subscribe from "./pages/Subscribe";
 import Dashboard from "./pages/Dashboard";
 import PlantListing from "./pages/PlantListing";
 import Confirmation from "./pages/Confirmation";
+import Payment from "./pages/Payment";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/plans" element={<Plans />} />
           <Route path="/select-plants" element={<PlantListing />} />
+          <Route path="/payment" element={<Payment />} />
           <Route path="/confirmation" element={<Confirmation />} />
           <Route path="/subscribe" element={<Subscribe />} />
           <Route path="/login" element={<Login />} />

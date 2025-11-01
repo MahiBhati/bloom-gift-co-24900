@@ -37,7 +37,7 @@ const PlantListing = () => {
     });
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     if (selectedPlants.length !== currentPlan.selectCount) {
       toast({
         title: "Incomplete Selection",
@@ -47,7 +47,7 @@ const PlantListing = () => {
       return;
     }
     
-    navigate('/confirmation', {
+    navigate('/payment', {
       state: {
         plan: currentPlan.name,
         price: currentPlan.price,

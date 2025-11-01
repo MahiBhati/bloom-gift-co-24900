@@ -40,21 +40,21 @@ const Dashboard = () => {
 
   const fetchSubscription = async (userId: string) => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from('subscriptions')
         .select('*')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(1)
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') throw error;
+      if (error) throw error;
       
       if (data) {
         setSubscription({
           ...data,
           selected_plants: data.selected_plants as any[]
-        });
+        } as Subscription);
       }
     } catch (error) {
       console.error('Error fetching subscription:', error);
@@ -169,10 +169,20 @@ const Dashboard = () => {
           )}
 
           <div className="mt-8 flex gap-4">
-            <Button size="lg" variant="outline" className="flex-1">
-              Update Address
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="flex-1"
+              onClick={() => navigate("/")}
+            >
+              Back to Home
             </Button>
-            <Button size="lg" variant="outline" className="flex-1" onClick={() => navigate("/plans")}>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="flex-1" 
+              onClick={() => navigate("/plans")}
+            >
               Change Plan
             </Button>
           </div>

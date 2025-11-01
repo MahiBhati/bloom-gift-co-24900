@@ -6,33 +6,17 @@ import { Leaf, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
-const planDetails = {
-  basic: {
-    name: "Basic Plan",
-    price: "₹99/year",
-    plants: ["Money Plant", "Jade Plant"],
-  },
-  standard: {
-    name: "Standard Plan",
-    price: "₹499/year",
-    plants: ["Snake Plant", "Areca Palm", "Peace Lily", "Marigold Seeds", "Basil Seeds"],
-  },
-  premium: {
-    name: "Premium Plan",
-    price: "₹1999/year",
-    plants: [
-      "Fiddle Leaf Fig",
-      "Bonsai Tree",
-      "Rubber Plant",
-      "Succulent Combo",
-      "Bamboo Palm",
-      "Sunflower Seeds",
-    ],
-  },
-};
+interface Subscription {
+  plan_name: string;
+  price: string;
+  selected_plants: any[];
+  status: string;
+  next_delivery_date?: string;
+}
 
 const Dashboard = () => {
   const [user, setUser] = useState<any>(null);
+  const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -50,7 +34,31 @@ const Dashboard = () => {
     }
     
     setUser(session.user);
+    await fetchSubscription(session.user.id);
     setLoading(false);
+  };
+
+  const fetchSubscription = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from('subscriptions')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
+
+      if (error && error.code !== 'PGRST116') throw error;
+      
+      if (data) {
+        setSubscription({
+          ...data,
+          selected_plants: data.selected_plants as any[]
+        });
+      }
+    } catch (error) {
+      console.error('Error fetching subscription:', error);
+    }
   };
 
   const handleLogout = async () => {
@@ -70,8 +78,6 @@ const Dashboard = () => {
     );
   }
 
-  // For demo purposes, showing standard plan
-  const currentPlan = planDetails.standard;
   const userName = user?.user_metadata?.name || user?.email?.split("@")[0] || "User";
 
   return (
@@ -89,59 +95,78 @@ const Dashboard = () => {
             </Button>
           </div>
 
-          <Card className="mb-8 animate-fade-in">
-            <CardHeader>
-              <CardTitle className="text-2xl">Welcome back, {userName}! 🌱</CardTitle>
-              <CardDescription>
-                Here's an overview of your plant subscription
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center p-4 bg-muted rounded-lg">
-                  <div>
-                    <p className="text-sm text-muted-foreground">Current Plan</p>
-                    <p className="text-xl font-bold text-primary">{currentPlan.name}</p>
+          {!subscription ? (
+            <Card className="mb-8 animate-fade-in">
+              <CardHeader>
+                <CardTitle className="text-2xl">Welcome, {userName}! 🌱</CardTitle>
+                <CardDescription>
+                  You don't have an active subscription yet
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button size="lg" onClick={() => navigate('/plans')}>
+                  Browse Plans
+                </Button>
+              </CardContent>
+            </Card>
+          ) : (
+            <>
+              <Card className="mb-8 animate-fade-in">
+                <CardHeader>
+                  <CardTitle className="text-2xl">Welcome back, {userName}! 🌱</CardTitle>
+                  <CardDescription>
+                    Here's an overview of your plant subscription
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center p-4 bg-muted rounded-lg">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Current Plan</p>
+                        <p className="text-xl font-bold text-primary">{subscription.plan_name} Plan</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm text-muted-foreground">Price</p>
+                        <p className="text-xl font-bold">{subscription.price}/year</p>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center p-4 bg-muted rounded-lg">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Status</p>
+                        <p className="text-lg font-semibold text-green-600 capitalize">{subscription.status}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm text-muted-foreground">Next Delivery</p>
+                        <p className="text-lg font-semibold">Coming Soon</p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm text-muted-foreground">Price</p>
-                    <p className="text-xl font-bold">{currentPlan.price}</p>
-                  </div>
-                </div>
-                <div className="flex justify-between items-center p-4 bg-muted rounded-lg">
-                  <div>
-                    <p className="text-sm text-muted-foreground">Status</p>
-                    <p className="text-lg font-semibold text-green-600">Active</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm text-muted-foreground">Next Delivery</p>
-                    <p className="text-lg font-semibold">Coming Soon</p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
 
-          <Card className="animate-fade-in" style={{ animationDelay: "0.1s" }}>
-            <CardHeader>
-              <CardTitle>Your Plants</CardTitle>
-              <CardDescription>Plants included in your subscription</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {currentPlan.plants.map((plant, index) => (
-                  <div
-                    key={plant}
-                    className="p-4 bg-primary/5 rounded-lg text-center hover:bg-primary/10 transition-colors"
-                    style={{ animationDelay: `${index * 0.05}s` }}
-                  >
-                    <Leaf className="w-8 h-8 text-primary mx-auto mb-2" />
-                    <p className="text-sm font-medium">{plant}</p>
+              <Card className="animate-fade-in" style={{ animationDelay: "0.1s" }}>
+                <CardHeader>
+                  <CardTitle>Your Plants</CardTitle>
+                  <CardDescription>Plants you selected for your subscription</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    {subscription.selected_plants.map((plant: any, index: number) => (
+                      <div
+                        key={plant.id}
+                        className="p-4 bg-primary/5 rounded-lg text-center hover:bg-primary/10 transition-colors"
+                        style={{ animationDelay: `${index * 0.05}s` }}
+                      >
+                        <div className="text-3xl mb-2">{plant.emoji}</div>
+                        <p className="text-sm font-medium">{plant.name}</p>
+                        <p className="text-xs text-muted-foreground">{plant.note}</p>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                </CardContent>
+              </Card>
+            </>
+          )}
 
           <div className="mt-8 flex gap-4">
             <Button size="lg" variant="outline" className="flex-1">

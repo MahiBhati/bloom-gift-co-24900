@@ -11,7 +11,7 @@ const plans = [
     price: "₹99",
     image: basicPlant,
     description: "Perfect for plant beginners",
-    occasions: 2,
+    occasions: 5,
     features: [
       "2 saplings annually",
       "Seasonal plant selection",
@@ -24,7 +24,7 @@ const plans = [
     price: "₹499",
     image: standardPlants,
     description: "Ideal for plant enthusiasts",
-    occasions: 3,
+    occasions: 5,
     features: [
       "3 plants annually",
       "2 seed packets included",
@@ -36,10 +36,10 @@ const plans = [
   },
   {
     name: "Premium",
-    price: "₹1999",
+    price: "₹999",
     image: premiumPlants,
     description: "For the dedicated green thumb",
-    occasions: 6,
+    occasions: 5,
     features: [
       "5 plants annually",
       "2 seed packets included",
@@ -67,9 +67,9 @@ const SubscriptionPlans = () => {
           {plans.map((plan, index) => (
             <Card 
               key={plan.name} 
-              className={`relative overflow-hidden transition-all hover:shadow-xl ${
+              className={`relative overflow-hidden transition-all hover:shadow-xl bg-gradient-to-br from-card to-accent/20 ${
                 plan.popular ? "border-primary border-2 scale-105" : ""
-              } animate-fade-in`}
+              } animate-fade-in rounded-2xl`}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               {plan.popular && (
@@ -107,10 +107,10 @@ const SubscriptionPlans = () => {
               </CardContent>
               <CardFooter>
                 <Button 
-                  className="w-full" 
+                  className="w-full rounded-full" 
                   variant={plan.popular ? "default" : "outline"}
                   size="lg"
-                  onClick={() => window.location.href = `/plants?plan=${plan.name.toLowerCase()}`}
+                  onClick={() => window.location.href = `/plans`}
                 >
                   Subscribe Now
                 </Button>

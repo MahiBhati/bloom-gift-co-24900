@@ -1,3 +1,5 @@
+
+-- Migration: 20251101093540
 -- Create subscriptions table to store user subscription details
 CREATE TABLE public.subscriptions (
   id UUID NOT NULL DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -43,6 +45,28 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_subscriptions_updated_at
+BEFORE UPDATE ON public.subscriptions
+FOR EACH ROW
+EXECUTE FUNCTION public.handle_updated_at();
+
+-- Migration: 20251101093711
+-- Fix function search path security warning
+DROP TRIGGER IF EXISTS update_subscriptions_updated_at ON public.subscriptions;
+DROP FUNCTION IF EXISTS public.handle_updated_at();
+
+CREATE OR REPLACE FUNCTION public.handle_updated_at()
+RETURNS TRIGGER 
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$;
 
 CREATE TRIGGER update_subscriptions_updated_at
 BEFORE UPDATE ON public.subscriptions

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-plants.jpg";
-import { Leaf } from "lucide-react";
+import { Leaf, Flower2, Sprout } from "lucide-react";
 
 const Hero = () => {
   return (
@@ -12,15 +12,15 @@ const Hero = () => {
               <Leaf className="w-6 h-6" />
               <span className="text-sm font-medium uppercase tracking-wider">Eco-Friendly Gifting</span>
             </div>
-            <h1 className="text-5xl md:text-6xl font-bold leading-tight text-center md:text-left">
-              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent animate-fade-in block">
-                Gift Happiness 🌸
+            <h1 className="text-5xl md:text-6xl font-heading font-bold leading-tight text-center md:text-left">
+              <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-fade-in block flex items-center justify-center md:justify-start gap-3">
+                Gift Happiness <Flower2 className="w-10 h-10 text-primary/70" />
               </span>
-              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent animate-fade-in block" style={{ animationDelay: '0.2s' }}>
-                Grow Green 🌿
+              <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-fade-in block flex items-center justify-center md:justify-start gap-3" style={{ animationDelay: '0.2s' }}>
+                Grow Green <Sprout className="w-10 h-10 text-primary/70" />
               </span>
-              <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent animate-fade-in block" style={{ animationDelay: '0.4s' }}>
-                Make Every Occasion Bloom 🌼
+              <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-fade-in block flex items-center justify-center md:justify-start gap-3" style={{ animationDelay: '0.4s' }}>
+                Make Every Occasion Bloom <Leaf className="w-10 h-10 text-primary/70" />
               </span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-xl text-center md:text-left">

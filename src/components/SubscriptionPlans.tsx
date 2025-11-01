@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Check } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import basicPlant from "@/assets/basic-plant.jpg";
 import standardPlants from "@/assets/standard-plants.jpg";
 import premiumPlants from "@/assets/premium-plants.jpg";
@@ -11,7 +12,7 @@ const plans = [
     price: "₹99",
     image: basicPlant,
     description: "Perfect for plant beginners",
-    occasions: 5,
+    occasions: 2,
     features: [
       "2 saplings annually",
       "Seasonal plant selection",
@@ -24,7 +25,7 @@ const plans = [
     price: "₹499",
     image: standardPlants,
     description: "Ideal for plant enthusiasts",
-    occasions: 5,
+    occasions: 3,
     features: [
       "3 plants annually",
       "2 seed packets included",
@@ -52,6 +53,42 @@ const plans = [
 ];
 
 const SubscriptionPlans = () => {
+  const navigate = useNavigate();
+
+  const planData = [
+    { name: "Basic", selectCount: 2 },
+    { name: "Standard", selectCount: 3 },
+    { name: "Premium", selectCount: 5 },
+  ];
+
+  const getPlantsByPlan = (planName: string) => {
+    const allPlants = {
+      Basic: [
+        { id: "tulsi", name: "Tulsi (Holy Basil)", note: "Spiritual and purifying", emoji: "🌿" },
+        { id: "money-plant", name: "Money Plant", note: "Symbol of prosperity", emoji: "💚" },
+        { id: "jade", name: "Jade Plant", note: "Good luck and positivity", emoji: "🍀" },
+        { id: "rose", name: "Rose Plant", note: "Love and beauty", emoji: "🌹" },
+      ],
+      Standard: [
+        { id: "snake", name: "Snake Plant", note: "Low-maintenance gift", emoji: "🌿" },
+        { id: "areca", name: "Areca Palm", note: "Indoor air purifier", emoji: "🌴" },
+        { id: "peace-lily", name: "Peace Lily", note: "Elegant and purifying", emoji: "🕊️" },
+        { id: "jasmine", name: "Jasmine (Mogra)", note: "Fragrant and peaceful", emoji: "🌸" },
+        { id: "aloe", name: "Aloe Vera", note: "Easy care, healing plant", emoji: "🌱" },
+        { id: "marigold", name: "Marigold Seeds", note: "Bright and cheerful", emoji: "🌼" },
+      ],
+      Premium: [
+        { id: "bonsai", name: "Bonsai Tree", note: "Artistic and symbolic", emoji: "🌳" },
+        { id: "rubber", name: "Rubber Plant", note: "Elegant indoor choice", emoji: "🌿" },
+        { id: "bamboo", name: "Bamboo Palm", note: "Prosperity & positivity", emoji: "🎋" },
+        { id: "fiddle", name: "Fiddle Leaf Fig", note: "Statement indoor plant", emoji: "🌿" },
+        { id: "lavender", name: "Lavender", note: "Fragrant & relaxing", emoji: "💜" },
+        { id: "succulent", name: "Succulent Combo", note: "Trendy gifting option", emoji: "🌵" },
+      ],
+    };
+    return allPlants[planName as keyof typeof allPlants] || [];
+  };
+
   return (
     <section className="py-20 bg-background" id="plans">
       <div className="container mx-auto px-4">
@@ -110,7 +147,17 @@ const SubscriptionPlans = () => {
                   className="w-full rounded-full" 
                   variant={plan.popular ? "default" : "outline"}
                   size="lg"
-                  onClick={() => window.location.href = `/plans`}
+                  onClick={() => {
+                    const planInfo = planData.find(p => p.name === plan.name);
+                    navigate('/select-plants', {
+                      state: {
+                        plan: plan.name,
+                        price: plan.price,
+                        selectCount: planInfo?.selectCount,
+                        plants: getPlantsByPlan(plan.name)
+                      }
+                    });
+                  }}
                 >
                   Subscribe Now
                 </Button>

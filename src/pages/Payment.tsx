@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { CreditCard, Smartphone, Wallet, Building } from "lucide-react";
+import { CreditCard, Smartphone, Wallet, Building, Flower2 } from "lucide-react";
 
 const Payment = () => {
   const location = useLocation();
@@ -75,8 +75,8 @@ const Payment = () => {
       if (error) throw error;
 
       toast({
-        title: "Payment Successful! 🎉",
-        description: "Your subscription has been activated.",
+        title: "Your green gifts are on their way! 🌿",
+        description: "Your subscription has been activated successfully.",
       });
 
       // Navigate to dashboard
@@ -96,9 +96,11 @@ const Payment = () => {
 
   const paymentOptions = [
     { id: "cod", name: "Cash on Delivery", icon: Wallet, description: "Pay when you receive" },
-    { id: "upi", name: "UPI (Google Pay / PhonePe)", icon: Smartphone, description: "Instant payment" },
+    { id: "googlepay", name: "Google Pay", icon: Smartphone, description: "Quick UPI payment" },
+    { id: "phonepe", name: "PhonePe", icon: Smartphone, description: "Quick UPI payment" },
     { id: "card", name: "Credit / Debit Card", icon: CreditCard, description: "Visa, Mastercard, etc." },
     { id: "netbanking", name: "Net Banking", icon: Building, description: "Bank transfer" },
+    { id: "upi", name: "UPI", icon: Smartphone, description: "Any UPI app" },
   ];
 
   return (
@@ -106,9 +108,13 @@ const Payment = () => {
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-2xl mx-auto">
           <div className="text-center mb-8 animate-fade-in">
-            <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Complete Your Order
-            </h1>
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Flower2 className="w-8 h-8 text-primary" />
+              <h1 className="text-4xl font-heading font-bold bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent">
+                Complete Your Subscription
+              </h1>
+              <Flower2 className="w-8 h-8 text-primary" />
+            </div>
             <p className="text-muted-foreground">
               You're one step away from starting your green journey!
             </p>

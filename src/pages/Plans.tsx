@@ -10,6 +10,7 @@ const plans = [
     duration: "year",
     emoji: "🌼",
     description: "Perfect for plant beginners or simple eco gifts",
+    occasions: 2,
     features: [
       "2 saplings annually",
       "Seasonal plant selection",
@@ -30,6 +31,7 @@ const plans = [
     duration: "year",
     emoji: "🌷",
     description: "Ideal for gifting to friends or decorating homes",
+    occasions: 3,
     features: [
       "3 plants annually",
       "2 seed packets included",
@@ -54,6 +56,7 @@ const plans = [
     duration: "year",
     emoji: "🌺",
     description: "For meaningful, long-lasting green gifts",
+    occasions: 5,
     features: [
       "5 plants annually",
       "2 seed packets included",
@@ -111,6 +114,9 @@ const Plans = () => {
                 <div className="mt-6">
                   <div className="text-4xl font-bold text-primary">{plan.price}</div>
                   <div className="text-sm text-muted-foreground">per {plan.duration}</div>
+                  <div className="text-sm text-muted-foreground mt-2">
+                    {plan.occasions} special occasions covered
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
